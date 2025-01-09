@@ -17,10 +17,6 @@ const sessionSchema = new mongoose.Schema({
     default: Date.now,
     get: formatDate,
   },
-  endTime: {
-    type: Date,
-    get: formatDate,
-  },
   lastActivity: {
     type: Date,
     default: Date.now,
@@ -30,9 +26,6 @@ const sessionSchema = new mongoose.Schema({
     type: String,
     enum: ["active", "inactive"],
     default: "active",
-  },
-  duration: {
-    type: Number,
   },
   referrer: {
     type: String,

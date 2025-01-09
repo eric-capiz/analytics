@@ -1,5 +1,5 @@
 app = "analytics-ykxfja"
-primary_region = "dfw"
+primary_region = "ewr"
 
 [build]
 
@@ -13,3 +13,8 @@ primary_region = "dfw"
 
 [env]
   PORT = "5000"
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

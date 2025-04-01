@@ -31,6 +31,35 @@ const sessionSchema = new mongoose.Schema({
     type: String,
     default: "Direct",
   },
+  deviceInfo: {
+    type: {
+      type: String,
+      enum: ["mobile", "tablet", "desktop"],
+    },
+    browser: String,
+    browserVersion: String,
+    screenWidth: Number,
+    screenHeight: Number,
+  },
+  scrollTracking: [
+    {
+      section: {
+        type: String,
+        enum: ["about", "projects", "skills", "contact"],
+      },
+      maxScrollDepth: {
+        type: Number,
+        min: 0,
+        max: 100,
+      },
+      timeSpent: Number,
+      timestamp: {
+        type: Date,
+        default: Date.now,
+        get: formatDate,
+      },
+    },
+  ],
   actions: [
     {
       type: { type: String },

@@ -7,9 +7,47 @@ router.post("/session/start", async (req, res) => {
   try {
     const session = new Session({
       referrer: req.body.referrer,
+      deviceInfo: req.body.deviceInfo,
     });
     await session.save();
     res.status(201).json({ sessionId: session._id });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update scroll tracking
+router.post("/session/:sessionId/scroll", async (req, res) => {
+  try {
+    const session = await Session.findById(req.params.sessionId);
+    if (!session) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    const { section, maxScrollDepth, timeSpent } = req.body;
+
+    // Update or add scroll tracking for the section
+    const existingSection = session.scrollTracking.find(
+      (track) => track.section === section
+    );
+
+    if (existingSection) {
+      // Update if new scroll depth is higher
+      if (maxScrollDepth > existingSection.maxScrollDepth) {
+        existingSection.maxScrollDepth = maxScrollDepth;
+      }
+      existingSection.timeSpent += timeSpent;
+    } else {
+      // Add new section tracking
+      session.scrollTracking.push({
+        section,
+        maxScrollDepth,
+        timeSpent,
+      });
+    }
+
+    await session.save();
+    res.status(200).json({ message: "Scroll tracking updated" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

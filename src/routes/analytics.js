@@ -24,31 +24,35 @@ router.post("/session/:sessionId/scroll", async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
-    const { section, maxScrollDepth, timeSpent } = req.body;
+    // Handle array of scroll data
+    const scrollDataArray = Array.isArray(req.body) ? req.body : [req.body];
 
-    // Update or add scroll tracking for the section
-    const existingSection = session.scrollTracking.find(
-      (track) => track.section === section
-    );
+    for (const { section, maxScrollDepth, timeSpent } of scrollDataArray) {
+      // Update or add scroll tracking for the section
+      const existingSection = session.scrollTracking.find(
+        (track) => track.section === section
+      );
 
-    if (existingSection) {
-      // Update if new scroll depth is higher
-      if (maxScrollDepth > existingSection.maxScrollDepth) {
-        existingSection.maxScrollDepth = maxScrollDepth;
+      if (existingSection) {
+        // Update if new scroll depth is higher
+        if (maxScrollDepth > existingSection.maxScrollDepth) {
+          existingSection.maxScrollDepth = maxScrollDepth;
+        }
+        existingSection.timeSpent += timeSpent;
+      } else {
+        // Add new section tracking
+        session.scrollTracking.push({
+          section,
+          maxScrollDepth,
+          timeSpent,
+        });
       }
-      existingSection.timeSpent += timeSpent;
-    } else {
-      // Add new section tracking
-      session.scrollTracking.push({
-        section,
-        maxScrollDepth,
-        timeSpent,
-      });
     }
 
     await session.save();
     res.status(200).json({ message: "Scroll tracking updated" });
   } catch (error) {
+    console.error("Scroll tracking error:", error);
     res.status(500).json({ error: error.message });
   }
 });

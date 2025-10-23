@@ -41,6 +41,22 @@ const sessionSchema = new mongoose.Schema({
     screenWidth: Number,
     screenHeight: Number,
   },
+  location: {
+    country: String,
+    region: String,
+    city: String,
+    timezone: String,
+    ip: String,
+  },
+  trafficSource: {
+    type: {
+      type: String,
+      enum: ["direct", "social", "search", "referral"],
+    },
+    source: String,
+    medium: String,
+    campaign: String,
+  },
   scrollTracking: [
     {
       section: {

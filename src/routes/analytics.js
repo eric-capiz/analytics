@@ -8,6 +8,8 @@ router.post("/session/start", async (req, res) => {
     const session = new Session({
       referrer: req.body.referrer,
       deviceInfo: req.body.deviceInfo,
+      location: req.body.location,
+      trafficSource: req.body.trafficSource,
     });
     await session.save();
     res.status(201).json({ sessionId: session._id });

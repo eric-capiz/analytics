@@ -46,7 +46,6 @@ const sessionSchema = new mongoose.Schema({
     region: String,
     city: String,
     timezone: String,
-    ip: String,
   },
   trafficSource: {
     type: {

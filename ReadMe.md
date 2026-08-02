@@ -106,13 +106,14 @@ url: window.location.pathname
 
 ## Note
 
-This system does not collect:
+This system can collect:
 
-- Personal data
-- Location information
-- Device details
-- Cookies
-- Browser information
+- Approximate location (via client-side geo lookup, when enabled)
+- Device / browser details
+- Referrer and traffic source
+- Scroll depth, time on section, and click actions
+
+It does not use cookies for identity and does not require a login.
 
 ## Tech Stack
 

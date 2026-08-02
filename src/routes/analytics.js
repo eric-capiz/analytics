@@ -51,6 +51,7 @@ router.post("/session/:sessionId/scroll", async (req, res) => {
       }
     }
 
+    session.lastActivity = new Date();
     await session.save();
     res.status(200).json({ message: "Scroll tracking updated" });
   } catch (error) {
@@ -76,6 +77,23 @@ router.post("/session/:sessionId/action", async (req, res) => {
     });
     await session.save();
     res.status(200).json({ message: "Action recorded" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// End session (tab close / navigation away)
+router.post("/session/:sessionId/end", async (req, res) => {
+  try {
+    const session = await Session.findById(req.params.sessionId);
+    if (!session) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    session.status = "inactive";
+    session.lastActivity = new Date();
+    await session.save();
+    res.status(200).json({ message: "Session ended" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -90,8 +90,17 @@ router.post("/session/:sessionId/end", async (req, res) => {
       return res.status(404).json({ error: "Session not found" });
     }
 
+    // Local variable, not session.endedAt: the schema getters return
+    // formatted strings, which would turn this math into NaN.
+    // (_doc.startTime is the raw stored Date for the same reason.)
+    const endedAt = new Date();
     session.status = "inactive";
-    session.lastActivity = new Date();
+    session.lastActivity = endedAt;
+    session.endedAt = endedAt;
+    session.durationSec = Math.max(
+      0,
+      Math.round((endedAt - session._doc.startTime) / 1000)
+    );
     await session.save();
     res.status(200).json({ message: "Session ended" });
   } catch (error) {

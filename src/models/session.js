@@ -27,6 +27,13 @@ const sessionSchema = new mongoose.Schema({
     enum: ["active", "inactive"],
     default: "active",
   },
+  endedAt: {
+    type: Date,
+    get: formatDate,
+  },
+  durationSec: {
+    type: Number,
+  },
   referrer: {
     type: String,
     default: "Direct",

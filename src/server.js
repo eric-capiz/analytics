@@ -12,7 +12,17 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://ericcapiz.com",
+      "https://www.ericcapiz.com",
+      "http://localhost:5173",
+      "http://localhost:4173",
+      "http://localhost:3000",
+    ],
+  })
+);
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
